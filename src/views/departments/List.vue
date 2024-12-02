@@ -26,10 +26,10 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <div class="d-flex justify-center ga-2">
-              <v-btn size="x-small" icon color="info" @click="getInfoScope(item.id)">
+              <v-btn size="x-small" icon color="info" @click="getDataById(item.id)">
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn>
-              <v-btn size="x-small" icon color="error" @click="handleDeleteScope(item)">
+              <v-btn size="x-small" icon color="error" @click="handleDelete(item)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
             </div>
@@ -50,7 +50,7 @@
                   <v-btn variant="elevated" color="grey-200" @click="deleteDialog = false">
                     Hủy bỏ
                   </v-btn>
-                  <v-btn variant="elevated" color="error" @click="deleteScope(deleteDialogData.id)">
+                  <v-btn variant="elevated" color="error" @click="deleteDepartment(deleteDialogData.id)">
                     Xóa
                   </v-btn>
                 </v-card-actions>
@@ -59,6 +59,18 @@
           </v-row>
         </template>
 
+        <DepartmentFormDialog 
+          v-bind="formCreateDialog" 
+          @submit="createData()" 
+          @closeDialog="formCreateDialog.open=false"
+          @afterLeave="formCreateDialog.data = initialForm()"
+        />
+        <DepartmentFormDialog 
+          v-bind="formUpdateDialog" 
+          @submit="updateData()" 
+          @closeDialog="formUpdateDialog.open=false"
+          @afterLeave="formUpdateDialog.data = initialForm()"
+        />
       </v-card-item>
     </v-card>
   </div>
@@ -68,6 +80,7 @@
 import { ref, reactive } from "vue";
 import { useToast } from "vue-toastification";
 import { useDepartmentStore } from "@/stores";
+import DepartmentFormDialog from "@/components/DepartmentFormDialog.vue";
 
 const toast = useToast();
 const departmentStore = useDepartmentStore();
@@ -81,11 +94,29 @@ const dataTable = reactive({
   headers: [
     {title: "#", key: "index", align: "center", sortable: false},
     {title: "Tên phòng ban", key: "name", align: "center", sortable: false},
+    {title: "Số loại thiết bị", key: "distinctTypeCount", align: "center", sortable: false},
+    {title: "Tổng số thiết bị", key: "totalEquipmentCount", align: "center", sortable: false},
     {title: "", key: "actions", sortable: false},
   ],
   items: [],
   pageIndex: 1,
 })
+
+const initialForm = () => ({ id: "", name: "" });
+const formCreateDialog = reactive({
+  title: "Thêm phòng ban",
+  buttonName: "Thêm",
+  open: false,
+  data: initialForm(),
+  loading: false,
+});
+const formUpdateDialog = reactive({
+  title: "Cập nhật phòng ban",
+  buttonName: "Cập nhật",
+  open: false,
+  data: initialForm(),
+  loading: false,
+});
 
 
 async function getData() {
@@ -103,24 +134,72 @@ async function getData() {
 }
 getData();
 
-async function createScope() {
-
+async function createData() {
+  try {
+    formCreateDialog.loading = true;
+    const response = await departmentStore.create(formCreateDialog.data);
+    formCreateDialog.open = false;
+    formCreateDialog.data = initialForm();
+    getData();
+    toast.success("Thêm phòng ban thành công");
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    console.log(error);
+  } finally {
+    formCreateDialog.loading = false;
+  }
 }
 
-async function getInfoScope(id) {
-
+async function getDataById(id) {
+  try {
+    formUpdateDialog.open = true;
+    formUpdateDialog.loading = true;
+    const response = await departmentStore.getById(id);
+    formUpdateDialog.data = {
+      id: response.id,
+      name: response.name,
+    };
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response?.data?.message || error.message);
+  } finally {
+    formUpdateDialog.loading = false;
+  }
 }
 
-async function updateScope() {
-
+async function updateData() {
+  try {
+    formUpdateDialog.loading = true;
+    const response = await departmentStore.update(formUpdateDialog.data);
+    formUpdateDialog.open = false;
+    getData();
+    toast.success("Cập nhật phòng ban thành công");
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    console.log(error);
+  } finally {
+    formUpdateDialog.loading = false;
+  }
 }
 
-function handleDeleteScope(scope) {
-
+function handleDelete(item) {
+  deleteDialogData.value = {
+    id: item.id,
+    name: item.name
+  }
+  deleteDialog.value = true;
 }
 
-async function deleteScope(id) {
-
+async function deleteDepartment(id) {
+  try {
+    const response = await departmentStore.delete(id);
+    deleteDialog.value = false;
+    getData();
+    toast.success("Xóa phòng ban thành công");
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    console.log(error);
+  }
 }
 </script>
 

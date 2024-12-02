@@ -18,8 +18,12 @@ export const useStorageStore = defineStore("useStorageStore", {
       const response = await ApiService.post("/storages", storage);
       return response.data;
     },
-    async update(id, storage) {
-      const response = await ApiService.put("/storages/"+id, storage);
+    async update(storage) {
+      const response = await ApiService.put("/storages/"+storage.id, storage);
+      return response.data;
+    },
+    async delete(id) {
+      const response = await ApiService.delete("/storages/"+id);
       return response.data;
     }
   }

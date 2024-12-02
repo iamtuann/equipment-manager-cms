@@ -18,8 +18,12 @@ export const useDepartmentStore = defineStore("useDepartmentStore", {
       const response = await ApiService.post("/departments", department);
       return response.data;
     },
-    async update(id, department) {
-      const response = await ApiService.put("/departments/"+id, department);
+    async update(department) {
+      const response = await ApiService.put("/departments/"+ department.id, department);
+      return response.data;
+    },
+    async delete(id) {
+      const response = await ApiService.delete("/departments/"+id);
       return response.data;
     }
   }

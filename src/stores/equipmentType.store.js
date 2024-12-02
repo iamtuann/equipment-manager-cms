@@ -18,8 +18,12 @@ export const useEquipmentTypeStore = defineStore("useEquipmentTypeStore", {
       const response = await ApiService.post("/types", equipmentType);
       return response.data;
     },
-    async update(id, equipmentType) {
-      const response = await ApiService.put("/types/"+id, equipmentType);
+    async update(equipmentType) {
+      const response = await ApiService.put("/types/"+equipmentType.id, equipmentType);
+      return response.data;
+    },
+    async delete(id) {
+      const response = await ApiService.delete("/types/"+id);
       return response.data;
     }
   }
