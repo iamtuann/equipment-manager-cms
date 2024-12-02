@@ -54,7 +54,11 @@ export default {
       {
         title: "",
         navs: [
-          {name: "Dashboard", path: {name: "Dashboard"}, icon: "mdi mdi-home"}, 
+        {name: "Dashboard", path: {name: "Dashboard"}, icon: "mdi mdi-home"}, 
+        {name: "Quản lý phòng ban", path: {name: "Departments"}, icon: "mdi mdi-office-building"},
+        {name: "Quản lý kho", path: {name: "Storages"}, icon: "mdi mdi-database"},
+        {name: "Quản lý loại thiết bị", path: {name: "EquipmentTypes"}, icon: "mdi mdi-format-list-bulleted-type"},
+        {name: "Quản lý thiết bị", path: {name: "Equipments"}, icon: "mdi mdi-cellphone-link"},
           // {
           //   name: "Quản lý", icon: "mdi mdi-account-cog",
           //   subNavs: [

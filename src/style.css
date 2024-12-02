@@ -31,6 +31,14 @@ body {
   justify-content: center;
 }
 
+.v-data-table__tr:nth-of-type(odd) {
+  background-color: rgb(var(--v-theme-grey-50));
+}
+table, table td, table th, table tr { 
+  border-collapse: collapse;
+  border: 1px solid rgba(var(--v-border-color),var(--v-border-opacity));
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

@@ -16,6 +16,58 @@ const routes = [
         meta: {
         }
       },
+      {
+        path: "/departments",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "Departments",
+            component: () => import("@/views/departments/List.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
+      {
+        path: "/equipment-types",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "EquipmentTypes",
+            component: () => import("@/views/equipmentTypes/List.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
+      {
+        path: "/storages",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "Storages",
+            component: () => import("@/views/storages/List.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
+      {
+        path: "/equipments",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "Equipments",
+            component: () => import("@/views/equipments/List.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
     ]
   },
   {
