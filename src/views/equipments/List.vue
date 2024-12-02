@@ -123,9 +123,9 @@
           <v-card-title>
             Danh sách thiết bị
           </v-card-title>
-          <!-- <v-btn append-icon="mdi-plus" :to="{name: 'CreateUser'}">
+          <v-btn append-icon="mdi-plus" :to="{name: 'CreateEquipment'}">
             Thêm
-          </v-btn> -->
+          </v-btn>
         </div>
       </v-card-item>
       <v-card-item>
@@ -147,6 +147,15 @@
           <template v-slot:item.index="{ index }">
             {{ index+=1 }}
           </template>
+          <template v-slot:item.equipmentType="{ item }">
+            {{ item.type?.name }}
+          </template>
+          <template v-slot:item.departmentName="{ item }">
+            {{ item.department?.name }}
+          </template>
+          <template v-slot:item.storageName="{ item }">
+            {{ item.storage?.name }}
+          </template>
           <template v-slot:item.receiveDate="{ item }">
             {{ formatDate(new Date(item.receiveDate)) }}
           </template>
@@ -163,10 +172,10 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <div class="d-flex justify-center ga-2">
-              <v-btn size="x-small" icon color="info">
+              <v-btn size="x-small" icon color="info"  :to="{name: 'UpdateEquipment', params: {id: item.id}}">
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn>
-              <v-btn size="x-small" icon color="error" @click="handleSearch(item)">
+              <v-btn size="x-small" icon color="error" @click="handleDelete(item)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
             </div>
@@ -179,7 +188,7 @@
               <v-card>
                 <v-toolbar color="error" title="Xóa thiết bị"></v-toolbar>
                 <v-card-text>
-                  <p>Bạn có chắc chắn muốn xóa thiết bị "<b> {{ deleteDialogData.username }}</b>"?
+                  <p>Bạn có chắc chắn muốn xóa thiết bị "<b> {{ deleteDialogData.name }}</b>"?
                   </p>
                 </v-card-text>
                 <v-card-actions class="mb-2">
@@ -187,7 +196,7 @@
                   <v-btn variant="elevated" color="grey-200" @click="deleteDialog = false">
                     Hủy bỏ
                   </v-btn>
-                  <v-btn variant="elevated" color="error" @click="deleteUser(deleteDialogData.id)">
+                  <v-btn variant="elevated" color="error" @click="deleteEquipment(deleteDialogData.id)">
                     Xóa
                   </v-btn>
                 </v-card-actions>
@@ -248,8 +257,8 @@ const dataTable = reactive({
     {title: "Trạng thái", key: "status", align: "center", sortable: false},
     {title: "Ngày nhập", key: "receiveDate", align: "center", sortable: true},
     {title: "Bảo hành", key: "warrantyDate", align: "center", sortable: true},
-    {title: "Phòng ban", key: "department", align: "center", sortable: true},
-    {title: "Kho", key: "storage", align: "center", sortable: true},
+    {title: "Phòng ban", key: "departmentName", align: "center", sortable: true},
+    {title: "Kho", key: "storageName", align: "center", sortable: true},
     {title: "", key: "actions", sortable: false},
   ],
   items: [],
@@ -288,12 +297,24 @@ async function getData({ page, itemsPerPage, sortBy }) {
   }
 }
 
-function handleDelete(user) {
-
+function handleDelete(item) {
+  deleteDialogData.value = {
+    id: item.id,
+    name: item.code
+  }
+  deleteDialog.value = true;
 }
 
 async function deleteEquipment(id) {
-
+  try {
+    const response = await equipmentStore.delete(id);
+    deleteDialog.value = false;
+    handleSearch();
+    toast.success("Xóa thiết bị thành công")
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.message);
+  }
 }
 
 async function getFormInfo() {

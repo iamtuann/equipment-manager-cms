@@ -65,6 +65,20 @@ const routes = [
             component: () => import("@/views/equipments/List.vue"),
             meta: {
             }
+          },
+          {
+            path: "create",
+            name: "CreateEquipment",
+            component: () => import("@/views/equipments/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/update",
+            name: "UpdateEquipment",
+            component: () => import("@/views/equipments/CreateUpdate.vue"),
+            meta: {
+            }
           }
         ]
       },

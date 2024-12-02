@@ -38,6 +38,10 @@ export const useEquipmentStore = defineStore("useEquipmentStore", {
     async update(id, equipment) {
       const response = await ApiService.put("/equipments/"+id, equipment);
       return response.data;
+    },
+    async delete(id) {
+      const response = await ApiService.delete("/equipments/"+id);
+      return response.data;
     }
   }
 })
