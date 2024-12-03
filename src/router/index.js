@@ -26,6 +26,13 @@ const routes = [
             component: () => import("@/views/departments/List.vue"),
             meta: {
             }
+          },
+          {
+            path: ":id/detail",
+            name: "DetaiDepartment",
+            component: () => import("@/views/departments/Detail.vue"),
+            meta: {
+            }
           }
         ]
       },

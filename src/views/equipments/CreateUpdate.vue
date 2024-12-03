@@ -40,17 +40,6 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-select
-            v-model="formEquipment.departmentId"
-            :items="departments"
-            label="Phòng ban"
-            density="comfortable"
-            item-value="id"
-            item-title="name"
-            clearable
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <v-select
             v-model="formEquipment.storageId"
             :items="storages"
             label="Kho"
