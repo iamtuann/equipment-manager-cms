@@ -32,7 +32,7 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <div class="d-flex justify-center ga-2">
-              <v-btn size="x-small" icon color="info" @click="getInfoScope(item.id)">
+              <v-btn size="x-small" icon color="info" @click="getDataById(item.id)">
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn>
               <v-btn size="x-small" icon color="error" @click="handleDelete(item)">
@@ -137,7 +137,7 @@ async function getData() {
     dataTable.totalItems = dataTable.items.length;
   } catch (e) {
     console.error(e);
-    toast.error(error?.message);
+    toast.error(e.response.data?.message || e.message);
   } finally {
     dataTable.loading = false;
   }

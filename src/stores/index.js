@@ -6,3 +6,4 @@ export * from "./equipment.store";
 export * from "./importReceipt.store";
 export * from "./handoverReceipt.store";
 export * from "./proposalReceipt.store";
+export * from "./receipt.store";
