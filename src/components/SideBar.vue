@@ -59,14 +59,12 @@ export default {
         {name: "Quản lý kho", path: {name: "Storages"}, icon: "mdi mdi-database"},
         {name: "Quản lý loại thiết bị", path: {name: "EquipmentTypes"}, icon: "mdi mdi-format-list-bulleted-type"},
         {name: "Quản lý thiết bị", path: {name: "Equipments"}, icon: "mdi mdi-cellphone-link"},
-          // {
-          //   name: "Quản lý", icon: "mdi mdi-account-cog",
-          //   subNavs: [
-          //     { name: "Quản lý người dùng", path: {name: "Users"}, icon: "mdi mdi-account-group" }, 
-          //     { name: "Quản lý phạm vi", path: {name: "Scopes"}, icon: "mdi mdi-security" }, 
-          //     { name: "Quản lý vai trò", path: {name: "Roles"}, icon: "mdi mdi-shield-account" }, 
-          //   ]
-          // },
+          {
+            name: "Phiếu", icon: "mdi mdi-receipt-outline",
+            subNavs: [
+              { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline" }, 
+            ]
+          },
         ]
       },
     ],

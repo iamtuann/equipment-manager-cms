@@ -82,6 +82,40 @@ const routes = [
           }
         ]
       },
+      {
+        path: "/import-receipts",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "ImportReceipts",
+            component: () => import("@/views/import-receipts/List.vue"),
+            meta: {
+            }
+          },
+          {
+            path: "create",
+            name: "CreateImportReceipt",
+            component: () => import("@/views/import-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/update",
+            name: "UpdateImportReceipt",
+            component: () => import("@/views/import-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/detail",
+            name: "DetailImportReceipt",
+            component: () => import("@/views/import-receipts/Detail.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
     ]
   },
   {
