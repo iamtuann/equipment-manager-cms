@@ -56,8 +56,6 @@ const isAdmin = authStore.isAdmin()
 const isBGH = authStore.isBGH()
 const isQTTB = authStore.isQTTB()
 const isLDK = authStore.isLDK()
-console.log(isAdmin);
-
 
 const items = [
   {

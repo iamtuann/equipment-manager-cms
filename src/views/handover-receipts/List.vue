@@ -223,7 +223,6 @@ async function getData({ page, itemsPerPage, sortBy }) {
     const response = await handoverReceiptStore.search(
       code, status, handoverDate, departmentId, createdBy, createdAt, approvedAt, page, itemsPerPage, key, orderBy
     );
-    console.log(response);
 
     dataTable.items = response.content;
     dataTable.totalItems = dataTable.items.length;

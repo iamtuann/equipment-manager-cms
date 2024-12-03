@@ -286,7 +286,6 @@ async function getData({ page, itemsPerPage, sortBy }) {
     const response = await equipmentStore.search(
       code, status, typeId, departmentId, storageId, receiveDate, warrantyDate, page, itemsPerPage, key, orderBy
     );
-    console.log(response);
     
     dataTable.items = response.content;
     dataTable.totalItems = dataTable.items.length;

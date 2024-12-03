@@ -63,7 +63,6 @@ export const useAuthStore = defineStore({
       try {
         const decodedToken = jwtDecode(localStorage.getItem("token"));
         const roles = decodedToken.roles.join(',');
-        console.log(roles);
         
         return !!(roles.includes(ROLE_ADMIN));
       } catch (error) {

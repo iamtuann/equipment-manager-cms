@@ -208,10 +208,10 @@ router.beforeEach(async (to, from, next) => {
   if (token && typeof token === 'string') {
     try {
       const roles = useAuthStore().getRole();
-      console.log(roles);
-      
       if (to.path === "/login" && useAuthStore().isAuth()) {
         next({name: 'Dashboard'})
+      } else if (to.meta?.requiredAuth && to.meta?.roles && !to.meta?.roles.some(role => roles.includes(role))) {
+        next({name: 'AccessDenied'})
       } else if (to.meta.requiredAuth && !useAuthStore().isAuth()) {
         next({name: 'Login'})
       } else {

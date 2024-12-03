@@ -224,8 +224,7 @@ async function getData({ page, itemsPerPage, sortBy }) {
     const response = await importReceiptStore.search(
       code, status, importDate, createdBy, createdAt, updatedAt, page, itemsPerPage, key, orderBy
     );
-    console.log(response);
-
+    
     dataTable.items = response.content;
     dataTable.totalItems = dataTable.items.length;
   } catch (e) {

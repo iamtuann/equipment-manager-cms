@@ -156,10 +156,7 @@ function handleDelete(index) {
 async function submitForm() {
   const { valid } = await formRef.value.validate();
   if (!valid) return;
-
   try {
-    console.log(formData.value);
-    
     if (route.name == "CreateImportReceipt") {
       const response = await importReceiptStore.create(formData.value);
       toast.success("Tạo phiếu thành công");
