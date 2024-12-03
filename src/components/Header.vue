@@ -3,8 +3,8 @@
     <v-spacer></v-spacer>
     <!-- <v-btn icon="mdi-bell-outline" size="40" class="me-2" color="default" /> -->
 
-    <v-btn id="header-theme-btn" icon="mdi-theme-light-dark" size="40" class="me-2" color="default"
-      @click="changeTheme" />
+    <!-- <v-btn id="header-theme-btn" icon="mdi-theme-light-dark" size="40" class="me-2" color="default"
+      @click="changeTheme" /> -->
     <VBadge v-bind="avatarBadgeProps">
       <VAvatar style="cursor: pointer;" color="primary" variant="tonal">
         <v-icon icon="mdi-account-circle"></v-icon>
@@ -54,7 +54,9 @@
 <script setup>
 import { useTheme } from 'vuetify'
 import { reactive } from 'vue';
+import { useAuthStore } from "@/stores";
 
+const authStore = useAuthStore()
 const avatarBadgeProps = {
   dot: true,
   location: 'bottom right',
@@ -66,8 +68,8 @@ const avatarBadgeProps = {
 
 const items = reactive([]);
 
-const fullname = localStorage.getItem('fullname') || "Họ tên";
-const role = localStorage.getItem('role') || "role";
+const fullname = authStore.getFullname();
+const role = authStore.getDisplayRole();
 
 const vuetifyTheme = useTheme()
 const changeTheme = () => {
@@ -82,7 +84,7 @@ const changeTheme = () => {
 }
 
 const logout = () => {
-  
+  authStore.logout();
 }
 
 </script>

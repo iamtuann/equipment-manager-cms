@@ -9,7 +9,9 @@
           <v-card-title>
             Danh sách thiết bị
           </v-card-title>
-          <v-btn append-icon="mdi-plus" @click="addDialog.open = true">
+          <v-btn append-icon="mdi-plus" @click="addDialog.open = true"
+            v-if="authStore.isAdmin() || authStore.isQTTB()"
+          >
             Thêm
           </v-btn>
         </div>
@@ -44,7 +46,7 @@
               readonly
             ></v-switch>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item.actions="{ item }" v-if="authStore.isAdmin() || authStore.isQTTB()">
             <div class="d-flex justify-center ga-2">
               <v-btn size="x-small" icon @click="openMoveDialog(item.id, item.code)">
                 <v-icon>mdi-database-arrow-left-outline</v-icon>
@@ -137,12 +139,13 @@
 
 <script setup>
 import { computed, ref, reactive } from "vue";
-import { useDepartmentStore, useEquipmentStore, useStorageStore } from "@/stores";
+import { useDepartmentStore, useEquipmentStore, useStorageStore, useAuthStore } from "@/stores";
 import { useToast } from "vue-toastification";
 import { useRoute } from "vue-router";
 
 const departmentStore = useDepartmentStore();
 const equipmentStore = useEquipmentStore();
+const authStore = useAuthStore();
 const toast = useToast();
 const route = useRoute();
 const statusItems = [

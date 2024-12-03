@@ -111,7 +111,9 @@
               <!-- <v-btn v-if="item.status == 0" size="x-small" icon color="info" :to="{ name: 'UpdateImportReceipt', params: { id: item.id } }">
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn> -->
-              <v-btn v-if="item.status == 0" size="x-small" icon color="error" @click="handleDelete(item)">
+              <v-btn size="x-small" icon color="error" @click="handleDelete(item)"
+                v-if="canDelete(item)" 
+              >
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
               <v-btn size="x-small" icon :to="{name: 'DetailImportReceipt', params: {id: item.id}}">
@@ -150,13 +152,14 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { useImportReceiptStore } from "@/stores";
+import { useImportReceiptStore, useAuthStore } from "@/stores";
 import { formatDate } from "@/utils";
 import { useToast } from "vue-toastification";
 
 const expansionPanel = ref([0]);
 const formSearchRef = ref(null);
 const importReceiptStore = useImportReceiptStore();
+const authStore = useAuthStore();
 const toast = useToast();
 
 const statusItems = [
@@ -230,6 +233,10 @@ async function getData({ page, itemsPerPage, sortBy }) {
   } finally {
     dataTable.loading = false;
   }
+}
+
+function canDelete(item) {
+  return item.status == 0 && (authStore.isAdmin() || authStore.isBGH() || authStore.getUsername() == item.createdBy.username)
 }
 
 function handleDelete(item) {

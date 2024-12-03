@@ -6,7 +6,9 @@
           <v-card-title>
             Danh sách phòng ban
           </v-card-title>
-          <v-btn append-icon="mdi-plus" @click="formCreateDialog.open = true">
+          <v-btn append-icon="mdi-plus" @click="formCreateDialog.open = true"
+            v-if="authStore.isAdmin() || authStore.isQTTB()"
+          >
             Thêm
           </v-btn>
         </div>
@@ -26,10 +28,14 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <div class="d-flex justify-center ga-2">
-              <v-btn size="x-small" icon color="info" @click="getDataById(item.id)">
+              <v-btn size="x-small" icon color="info" @click="getDataById(item.id)"
+                v-if="authStore.isAdmin() || authStore.isQTTB()"
+              >
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn>
-              <v-btn size="x-small" icon color="error" @click="handleDelete(item)">
+              <v-btn size="x-small" icon color="error" @click="handleDelete(item)"
+                v-if="authStore.isAdmin() || authStore.isQTTB()"
+              >
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
               <v-btn size="x-small" icon :to="{name: 'DetaiDepartment', params: {id: item.id}}">
@@ -82,11 +88,12 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useToast } from "vue-toastification";
-import { useDepartmentStore } from "@/stores";
+import { useDepartmentStore, useAuthStore } from "@/stores";
 import DepartmentFormDialog from "@/components/DepartmentFormDialog.vue";
 
 const toast = useToast();
 const departmentStore = useDepartmentStore();
+const authStore = useAuthStore();
 
 const deleteDialog = ref(false);
 const deleteDialogData = ref(null);

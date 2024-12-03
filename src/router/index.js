@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouterView } from "vue-router";
 import {h, render} from 'vue'
 import { jwtDecode  } from "jwt-decode";
 import { ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK } from "@/constant";
+import { useAuthStore } from "@/stores";
 
 const routes = [
   {
@@ -14,11 +15,17 @@ const routes = [
         name: "Dashboard",
         component: () => import("@/views/Dashboard.vue"),
         meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK],
         }
       },
       {
         path: "/departments",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK],
+        },
         children: [
           {
             path: "",
@@ -39,6 +46,10 @@ const routes = [
       {
         path: "/equipment-types",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB],
+        },
         children: [
           {
             path: "",
@@ -52,6 +63,10 @@ const routes = [
       {
         path: "/storages",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB],
+        },
         children: [
           {
             path: "",
@@ -65,6 +80,10 @@ const routes = [
       {
         path: "/equipments",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB],
+        },
         children: [
           {
             path: "",
@@ -92,6 +111,10 @@ const routes = [
       {
         path: "/import-receipts",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK],
+        },
         children: [
           {
             path: "",
@@ -126,6 +149,10 @@ const routes = [
       {
         path: "/handover-receipts",
         component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK],
+        },
         children: [
           {
             path: "",
@@ -163,7 +190,12 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () => import("@/views/Login.vue")
-  }
+  },
+  {
+    path: "/access-denied",
+    name: "AccessDenied",
+    component: () => import("@/views/AccessDenied.vue"),
+  },
 ]
 
 const router = createRouter({
@@ -171,43 +203,30 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach(async (to, from, next) => { 
-//   const token = localStorage.getItem("token");
-//   if (token && typeof token === 'string') {
-//     try {
-//       const decodedToken = jwtDecode(token);
-//       console.log(decodedToken);
+router.beforeEach(async (to, from, next) => { 
+  const token = localStorage.getItem("token");
+  if (token && typeof token === 'string') {
+    try {
+      const roles = useAuthStore().getRole();
+      console.log(roles);
       
-//       const roles = decodedToken.roles.join(',');
-//       if (to.path === "/login" && authStore().isAuth()) {
-//         // router.push("/");
-//         next({name: 'Dashboard'})
-//       } else if (to.meta.requiredAuth && to.meta.roles && !to.meta.roles.some(role => roles.includes(role))) {
-//         next({name: 'AccessDenied'})
-//       } else if (to.meta.requiredAuth && !authStore().isAuth()) {
-//         // authStore().returnUrl = to.fullPath;
-//         const nameUrl = to.name;
-//         if (nameUrl === 'LeadInfo') {
-//           localStorage.setItem("nameUrlLead", nameUrl);
-//           localStorage.setItem("idLead", to.params.id);
-//         } else if (nameUrl === 'RegisterCardInfo') {
-//           localStorage.setItem("nameUrlRegisterCard", nameUrl);
-//           localStorage.setItem("idRegisterCard", to.params.id);
-//         }
-//         next({name: 'Login'})
-//       } else {
-//         next()
-//       }
-//     } catch (error) {
-//       next()
-//     }
-//   } else {
-//     if (to.meta.requiredAuth) {
-//       next({ name: 'Login' });
-//     } else {
-//       next();
-//     }
-//   }
-// });
+      if (to.path === "/login" && useAuthStore().isAuth()) {
+        next({name: 'Dashboard'})
+      } else if (to.meta.requiredAuth && !useAuthStore().isAuth()) {
+        next({name: 'Login'})
+      } else {
+        next()
+      }
+    } catch (error) {
+      next()
+    }
+  } else {
+    if (to.meta.requiredAuth) {
+      next({ name: 'Login' });
+    } else {
+      next();
+    }
+  }
+});
 
 export default router;

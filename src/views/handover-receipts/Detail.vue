@@ -43,7 +43,10 @@
           </tbody>
         </v-table>
       </v-col>
-      <v-col v-if="formData.status != 0" cols="12">
+      <v-col cols="12">
+        <p v-if="formData.status == 0" class="color-success">
+          Đang chờ phê duyệt
+        </p>
         <p v-if="formData.status == 1" class="color-success">
           Đã được phê duyệt bởi {{ formData.approvedBy.firstName + " " + formData.approvedBy.lastName }} 
           vào {{ formatDate(new Date(formData.approvedAt)) }}
@@ -53,7 +56,7 @@
           vào {{ formatDate(new Date(formData.approvedAt)) }}
         </p>
       </v-col>
-      <v-col v-if="formData.status == 0" cols="12" class="d-flex justify-center ga-3 mt-4">
+      <v-col v-if="formData.status == 0 && (authStore.isAdmin() || authStore.isBGH())" cols="12" class="d-flex justify-center ga-3 mt-4">
         <v-btn color="error" @click="handleReject">
           Từ chối
         </v-btn>
@@ -68,11 +71,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { formatDate, formatPrice } from "@/utils";
-import { useHandoverReceiptStore } from "@/stores";
+import { formatDate } from "@/utils";
+import { useHandoverReceiptStore, useAuthStore } from "@/stores";
 import { useToast } from "vue-toastification";
 
 const handoverReceiptStore = useHandoverReceiptStore();
+const authStore = useAuthStore();
 const formData = ref({});
 const route = useRoute();
 const router = useRouter();

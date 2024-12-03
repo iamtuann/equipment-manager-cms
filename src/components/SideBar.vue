@@ -13,7 +13,7 @@
         <v-list class="w-200">
           <li v-for="nav in item.navs" :key="nav.name" class="nav-link">
             <template v-if="nav.subNavs != null">
-              <v-list-group v-if="nav.show != false">
+              <v-list-group v-if="nav.show">
                 <template v-slot:activator="{ props }">
                   <v-list-item class="item" v-bind="props">
                     <template v-slot:prepend>
@@ -22,16 +22,18 @@
                     {{ nav.name }}
                   </v-list-item>
                 </template>
-                <v-list-item active-class="item-active" v-for="subNav in nav.subNavs" :key="subNav.name" :to="subNav.path">
-                  <template v-slot:prepend>
-                    <span class="nav-icon" :class="subNav.icon"></span>
-                  </template>
-                  {{ subNav.name }}
-                </v-list-item>
+                <template v-for="subNav in nav.subNavs" :key="subNav.name">
+                  <v-list-item v-if="subNav.show" active-class="item-active" :to="subNav.path">
+                    <template v-slot:prepend>
+                      <span class="nav-icon" :class="subNav.icon"></span>
+                    </template>
+                    {{ subNav.name }}
+                  </v-list-item>
+                </template>
               </v-list-group>
             </template>
             <template v-else>
-              <v-list-item active-class="item-active" :to="nav.path">
+              <v-list-item v-if="nav.show" active-class="item-active" :to="nav.path">
                 <template v-slot:prepend>
                   <span class="nav-icon" :class="nav.icon"></span>
                 </template>
@@ -45,32 +47,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useAuthStore } from "@/stores";
+import { ref, reactive } from "vue";
 
-export default {
-  name: "SideBar",
-  data: () => ({
-    items: [
+const authStore = useAuthStore();
+const isAdmin = authStore.isAdmin()
+const isBGH = authStore.isBGH()
+const isQTTB = authStore.isQTTB()
+const isLDK = authStore.isLDK()
+console.log(isAdmin);
+
+
+const items = [
+  {
+    title: "",
+    navs: [
+      {name: "Dashboard", path: {name: "Dashboard"}, icon: "mdi mdi-home", show: true}, 
+      {name: "Quản lý phòng ban", path: {name: "Departments"}, icon: "mdi mdi-office-building", show: true},
+      {name: "Quản lý kho", path: {name: "Storages"}, icon: "mdi mdi-database", show: isAdmin || isQTTB},
+      {name: "Quản lý loại thiết bị", path: {name: "EquipmentTypes"}, icon: "mdi mdi-format-list-bulleted-type", show: isAdmin || isQTTB},
+      {name: "Quản lý thiết bị", path: {name: "Equipments"}, icon: "mdi mdi-cellphone-link", show: isAdmin || isQTTB},
       {
-        title: "",
-        navs: [
-        {name: "Dashboard", path: {name: "Dashboard"}, icon: "mdi mdi-home"}, 
-        {name: "Quản lý phòng ban", path: {name: "Departments"}, icon: "mdi mdi-office-building"},
-        {name: "Quản lý kho", path: {name: "Storages"}, icon: "mdi mdi-database"},
-        {name: "Quản lý loại thiết bị", path: {name: "EquipmentTypes"}, icon: "mdi mdi-format-list-bulleted-type"},
-        {name: "Quản lý thiết bị", path: {name: "Equipments"}, icon: "mdi mdi-cellphone-link"},
-          {
-            name: "Phiếu", icon: "mdi mdi-receipt-outline",
-            subNavs: [
-              { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline" }, 
-              { name: "Phiếu bàn giao", path: {name: "HandoverReceipts"}, icon: "mdi mdi-receipt-text-arrow-right-outline" }, 
-            ]
-          },
+        name: "Phiếu", icon: "mdi mdi-receipt-outline", show: true,
+        subNavs: [
+          { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline", show: true }, 
+          { name: "Phiếu bàn giao", path: {name: "HandoverReceipts"}, icon: "mdi mdi-receipt-text-arrow-right-outline", show: true }, 
         ]
       },
-    ],
-  })
-}
+    ]
+  },
+]
 </script>
 
 <style scoped>
@@ -83,6 +90,7 @@ a {
 }
 .nav-items {
   position: relative;
+  list-style-type: none;
 }
 .nav-items .item-active {
   background: linear-gradient(-72.47deg,rgb(var(--v-theme-primary)) 22.16%,rgba(var(--v-theme-primary),.7) 76.47%)!important;
