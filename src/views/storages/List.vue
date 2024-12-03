@@ -32,6 +32,9 @@
               <v-btn size="x-small" icon color="error" @click="handleDelete(item)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
+              <v-btn size="x-small" icon :to="{name: 'DetaiStorage', params: {id: item.id}}">
+                <v-icon>mdi-eye-outline</v-icon>
+              </v-btn>
             </div>
           </template>
         </v-data-table>

@@ -30,6 +30,9 @@ export const useEquipmentStore = defineStore("useEquipmentStore", {
     async searchInDepartment(departmentId, page, pageSize, key, orderBy) {
       return this.search(null, null, null, departmentId, null, null, null, page, pageSize, key, orderBy);
     },
+    async searchInStorage(storageId, page, pageSize, key, orderBy) {
+      return this.search(null, null, null, null, storageId, null, null, page, pageSize, key, orderBy);
+    },
     async getAllInStorage(typeId, storageId, status) {
       const response = await ApiService.get("/equipments/all/in-storage", {
         params: {

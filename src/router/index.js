@@ -74,7 +74,14 @@ const routes = [
             component: () => import("@/views/storages/List.vue"),
             meta: {
             }
-          }
+          },
+          {
+            path: ":id/detail",
+            name: "DetaiStorage",
+            component: () => import("@/views/storages/Detail.vue"),
+            meta: {
+            }
+          },
         ]
       },
       {
