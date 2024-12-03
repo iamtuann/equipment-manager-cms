@@ -5,3 +5,4 @@ export * from "./equipmentType.store";
 export * from "./equipment.store";
 export * from "./importReceipt.store";
 export * from "./handoverReceipt.store";
+export * from "./proposalReceipt.store";

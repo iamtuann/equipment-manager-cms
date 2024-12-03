@@ -184,6 +184,44 @@ const routes = [
           }
         ]
       },
+      {
+        path: "/proposal-receipts",
+        component: { render: () => h(RouterView) },
+        meta: {
+          requiredAuth: true,
+          roles: [ROLE_ADMIN, ROLE_QTTB, ROLE_BGH, ROLE_LDK],
+        },
+        children: [
+          {
+            path: "",
+            name: "ProposalReceipts",
+            component: () => import("@/views/proposal-receipts/List.vue"),
+            meta: {
+            }
+          },
+          {
+            path: "create",
+            name: "CreateProposalReceipt",
+            component: () => import("@/views/proposal-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/update",
+            name: "UpdateProposalReceipt",
+            component: () => import("@/views/proposal-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/detail",
+            name: "DetailProposalReceipt",
+            component: () => import("@/views/proposal-receipts/Detail.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
     ]
   },
   {

@@ -69,8 +69,9 @@ const items = [
       {
         name: "Phiếu", icon: "mdi mdi-receipt-outline", show: true,
         subNavs: [
-          { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline", show: true }, 
-          { name: "Phiếu bàn giao", path: {name: "HandoverReceipts"}, icon: "mdi mdi-receipt-text-arrow-right-outline", show: true }, 
+          { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline", show: isAdmin || isQTTB || isBGH }, 
+          { name: "Phiếu bàn giao", path: {name: "HandoverReceipts"}, icon: "mdi mdi-receipt-text-arrow-right-outline", show: isAdmin || isQTTB || isBGH }, 
+          { name: "Phiếu đề xuất", path: {name: "ProposalReceipts"}, icon: "mdi mdi-receipt-text-plus-outline", show: true }, 
         ]
       },
     ]
