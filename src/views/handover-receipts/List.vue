@@ -3,7 +3,7 @@
     <v-expansion-panels v-model="expansionPanel">
       <v-expansion-panel>
         <v-expansion-panel-title static>
-          <span class="font-weight-medium text-h6">Phiếu nhập thiết bị</span>
+          <span class="font-weight-medium text-h6">Phiếu bàn giao thiết bị</span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-form @submit.prevent="handleSearch" ref="formSearchRef">
@@ -18,14 +18,14 @@
                 <v-select v-model="formSearch.status" :items="statusItems" label="Trạng thái" density="compact" clearable></v-select>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-menu v-model="openImportDate" offset-y :close-on-content-click="false">
+                <v-menu v-model="openHandoverDate" offset-y :close-on-content-click="false">
                   <template v-slot:activator="{ props }">
-                    <v-text-field v-bind="props" density="compact" :modelValue="importDateFormat"
-                      append-inner-icon="mdi-calendar-month" label="Ngày nhập" clearable readonly
-                      @click:clear="formSearch.importDate = null"></v-text-field>
+                    <v-text-field v-bind="props" density="compact" :modelValue="handoverDateFormat"
+                      append-inner-icon="mdi-calendar-month" label="Ngày bàn giao" clearable readonly
+                      @click:clear="formSearch.handoverDate = null"></v-text-field>
                   </template>
-                  <v-date-picker v-model="formSearch.importDate" no-title show-adjacent-months color="primary"
-                    hide-weekdays hide-header @update:modelValue="openImportDate = false">
+                  <v-date-picker v-model="formSearch.handoverDate" no-title show-adjacent-months color="primary"
+                    hide-weekdays hide-header @update:modelValue="openHandoverDate = false">
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -54,9 +54,9 @@
       <v-card-item>
         <div class="d-flex justify-space-between align-center">
           <v-card-title>
-            Danh sách phiếu nhập
+            Danh sách phiếu bàn giao
           </v-card-title>
-          <v-btn append-icon="mdi-plus" :to="{name: 'CreateImportReceipt'}">
+          <v-btn append-icon="mdi-plus" :to="{name: 'CreateHandoverReceipt'}">
             Tạo phiếu
           </v-btn>
         </div>
@@ -86,8 +86,8 @@
           <template v-slot:item.approvedBy="{ item }">
             {{ item.approvedBy?.username }}
           </template>
-          <template v-slot:item.importDate="{ item }">
-            {{ formatDate(new Date(item.importDate)) }}
+          <template v-slot:item.handoverDate="{ item }">
+            {{ formatDate(new Date(item.handoverDate)) }}
           </template>
           <template v-slot:item.createdAt="{ item }">
             {{ formatDate(new Date(item.createdAt)) }}
@@ -108,13 +108,13 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <div class="d-flex justify-center ga-2">
-              <!-- <v-btn v-if="item.status == 0" size="x-small" icon color="info" :to="{ name: 'UpdateImportReceipt', params: { id: item.id } }">
+              <!-- <v-btn v-if="item.status == 0" size="x-small" icon color="info" :to="{ name: 'UpdateHandoverReceipt', params: { id: item.id } }">
                 <v-icon>mdi-pencil-outline</v-icon>
               </v-btn> -->
               <v-btn v-if="item.status == 0" size="x-small" icon color="error" @click="handleDelete(item)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
-              <v-btn size="x-small" icon :to="{name: 'DetailImportReceipt', params: {id: item.id}}">
+              <v-btn size="x-small" icon :to="{name: 'DetailHandoverReceipt', params: {id: item.id}}">
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
             </div>
@@ -125,7 +125,7 @@
           <v-row justify="center">
             <v-dialog v-model="deleteDialog" persistent width="800">
               <v-card>
-                <v-toolbar color="error" title="Xóa phiếu nhập"></v-toolbar>
+                <v-toolbar color="error" title="Xóa phiếu bàn giao"></v-toolbar>
                 <v-card-text>
                   <p>Bạn có chắc chắn muốn xóa phiếu "<b> {{ deleteDialogData.name }}</b>"?
                   </p>
@@ -150,13 +150,13 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { useImportReceiptStore } from "@/stores";
+import { useHandoverReceiptStore } from "@/stores";
 import { formatDate } from "@/utils";
 import { useToast } from "vue-toastification";
 
 const expansionPanel = ref([0]);
 const formSearchRef = ref(null);
-const importReceiptStore = useImportReceiptStore();
+const handoverReceiptStore = useHandoverReceiptStore();
 const toast = useToast();
 
 const statusItems = [
@@ -169,13 +169,14 @@ const formSearch = reactive({
   code: "",
   status: null,
   createdBy: "",
-  importDate: null,
+  handoverDate: null,
+  departmentId: null,
   createdAt: null,
-  updatedAt: null,
+  approvedAt: null,
 })
-const openImportDate = ref(false);
+const openHandoverDate = ref(false);
 const openCreatedDate = ref(false);
-const importDateFormat = computed(() => formatDate(formSearch.importDate));
+const handoverDateFormat = computed(() => formatDate(formSearch.handoverDate));
 const createdDateFormat = computed(() => formatDate(formSearch.createdAt));
 
 const deleteDialog = ref(false);
@@ -188,7 +189,7 @@ const dataTable = reactive({
   headers: [
     { title: "#", key: "index", align: "center", sortable: false },
     { title: "Mã phiếu", key: "code", align: "center", sortable: true },
-    { title: "Ngày nhập", key: "importDate", align: "center", sortable: true },
+    { title: "Ngày bàn giao", key: "handoverDate", align: "center", sortable: true },
     { title: "Người tạo", key: "createdBy", align: "center", sortable: true },
     { title: "Ngày tạo", key: "createdAt", align: "center", sortable: true },
     { title: "Người phê duyệt", key: "approvedBy", align: "center", sortable: true },
@@ -215,11 +216,11 @@ function handleSearch() {
 async function getData({ page, itemsPerPage, sortBy }) {
   dataTable.loading = true;
   try {
-    const { code, status, importDate, createdBy, createdAt, updatedAt } = formSearch;
+    const { code, status, handoverDate, departmentId, createdBy, createdAt, approvedAt } = formSearch;
     const key = sortBy[0]?.key || null;
     const orderBy = sortBy[0]?.order || null;
-    const response = await importReceiptStore.search(
-      code, status, importDate, createdBy, createdAt, updatedAt, page, itemsPerPage, key, orderBy
+    const response = await handoverReceiptStore.search(
+      code, status, handoverDate, departmentId, createdBy, createdAt, approvedAt, page, itemsPerPage, key, orderBy
     );
     console.log(response);
 
@@ -242,7 +243,7 @@ function handleDelete(item) {
 
 async function deleteData(id) {
   try {
-    const response = await importReceiptStore.delete(id);
+    const response = await handoverReceiptStore.delete(id);
     deleteDialog.value = false;
     handleSearch();
     toast.success("Xóa phiếu thành công")

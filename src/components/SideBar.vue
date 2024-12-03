@@ -63,6 +63,7 @@ export default {
             name: "Phiếu", icon: "mdi mdi-receipt-outline",
             subNavs: [
               { name: "Phiếu nhập", path: {name: "ImportReceipts"}, icon: "mdi mdi-receipt-text-arrow-left-outline" }, 
+              { name: "Phiếu bàn giao", path: {name: "HandoverReceipts"}, icon: "mdi mdi-receipt-text-arrow-right-outline" }, 
             ]
           },
         ]

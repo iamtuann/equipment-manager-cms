@@ -116,6 +116,40 @@ const routes = [
           }
         ]
       },
+      {
+        path: "/handover-receipts",
+        component: { render: () => h(RouterView) },
+        children: [
+          {
+            path: "",
+            name: "HandoverReceipts",
+            component: () => import("@/views/handover-receipts/List.vue"),
+            meta: {
+            }
+          },
+          {
+            path: "create",
+            name: "CreateHandoverReceipt",
+            component: () => import("@/views/handover-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/update",
+            name: "UpdateHandoverReceipt",
+            component: () => import("@/views/handover-receipts/CreateUpdate.vue"),
+            meta: {
+            }
+          },
+          {
+            path: ":id/detail",
+            name: "DetailHandoverReceipt",
+            component: () => import("@/views/handover-receipts/Detail.vue"),
+            meta: {
+            }
+          }
+        ]
+      },
     ]
   },
   {
